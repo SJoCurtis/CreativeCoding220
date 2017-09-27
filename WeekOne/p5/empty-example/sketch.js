@@ -2,7 +2,7 @@ var attractors = [];
 var particles = [];
 
 function setup() {
-  createCanvas(canvasWidth,canvasHeight);
+  createCanvas(windowWidth,windowHeight);
 
   // for (var i = 0; i < 10; i++) {
 }
@@ -12,9 +12,9 @@ function mousePressed() {
 }
 
 function draw() {
-  background(51);
+  background(0);
   stroke(255);
-  strokeWeight(4);
+  strokeWeight(5);
   particles.push(new Particle(random(width), random(height)));
 
   if (particles.length > 100) {
@@ -22,7 +22,7 @@ function draw() {
   }
 
   for (var i = 0; i < attractors.length; i++) {
-    stroke(0, 255, 0);
+    stroke(255,255,0);
     point(attractors[i].x, attractors[i].y);
   }
   for (var i = 0; i < particles.length; i++) {

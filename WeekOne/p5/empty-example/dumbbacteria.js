@@ -1,9 +1,7 @@
 function Particle(x, y) {
   this.pos = createVector(x, y);
   this.prev = createVector(x, y);
-  this.vel = createVector(); //p5.Vector.random2D();
-  //this.vel = p5.Vector.random2D();
-  //this.vel.setMag(random(2, 5));
+  this.vel = createVector();
   this.acc = createVector();
 
   this.update = function() {
@@ -15,7 +13,7 @@ function Particle(x, y) {
 
   this.show = function() {
     stroke(255, 255);
-    strokeWeight(4);
+    strokeWeight(10);
     line(this.pos.x, this.pos.y, this.prev.x, this.prev.y);
 
     this.prev.x = this.pos.x;
