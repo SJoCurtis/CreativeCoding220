@@ -2,11 +2,9 @@ var attractors = [];
 var particles = [];
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(canvasWidth,canvasHeight);
 
   // for (var i = 0; i < 10; i++) {
-  //   attractors.push(createVector(random(width), random(height)));
-  // }
 }
 
 function mousePressed() {
