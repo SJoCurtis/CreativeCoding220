@@ -13,7 +13,7 @@ function Particle(x, y) {
 
   this.show = function() {
     stroke(255, 255);
-    strokeWeight(10);
+    strokeWeight(5);
     line(this.pos.x, this.pos.y, this.prev.x, this.prev.y);
 
     this.prev.x = this.pos.x;
@@ -22,15 +22,15 @@ function Particle(x, y) {
   }
 
   this.attracted = function(target) {
-    // var dir = target - this.pos
+    var dir = target - this.pos
     var force = p5.Vector.sub(target, this.pos);
     var d = force.mag();
     d = constrain(d, 1, 25);
-    var G = 50;
+    var G = 60;
     var strength = G / (d * d);
     force.setMag(strength);
-    if (d < 20) {
-      force.mult(-10);
+    if (d < 10) {
+      force.mult(-20);
     }
     this.acc.add(force);
   }

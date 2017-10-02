@@ -3,10 +3,7 @@ var particles = [];
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
-
-  // for (var i = 0; i < 10; i++) {
 }
-
 function mousePressed() {
   attractors.push(createVector(mouseX, mouseY));
 }
@@ -14,10 +11,10 @@ function mousePressed() {
 function draw() {
   background(0);
   stroke(255);
-  strokeWeight(5);
+  strokeWeight(7);
   particles.push(new Particle(random(width), random(height)));
 
-  if (particles.length > 100) {
+  if (particles.length > 95) {
     particles.splice(0, 1);
   }
 
