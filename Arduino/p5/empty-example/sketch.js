@@ -1,142 +1,60 @@
-import processing.serial.*;
-
-Serial myPort;
-final var linefeed = 10;
-
-//maximum number of sensors to display
-final var maxSensors = 6;
-
-//raw analog input values from controller
-var raw[];
-var rawMin[];
-var rawMax[];
-var max = 15; // max createCanvas of each dot
-var row;
-var column;
-
-//values scaled to fit screen
-var scaledVal[];
-var scaledMin[];
-var scaledMax[];
-var prevScaledVal[];
-
-//min/max values of analog input from controller
-final var minAnalogVal = 0;
-final var maxAnalogVal = 1024;
-
-//colors used to draw sensor graphs
-color colors[];
-
-var xCursor = 0;
-
-//length of each line segment in graph, 1=1 pixel
-final var plotLineLength = 1;
-
-PFont myFont;
-final var fontSize = 12;
-
-final var drawDelay = 10;
-
-var madeContact = false;
-
+//variables for ball
+var x = 180;
+var y = 180;
+var xspeed = 9;
+var yspeed = 10;
+//variables for fractal tree
+var angle = 0;
+var slider;
 
 function setup() {
-
-  myPort = new Serial(this, Serial.list()[0], 9600);
-  myPort.bufferUntil(linefeed);
-
-  //initialize raw vars
-  raw = new Array(maxSensors);
-  rawMin = new Array(maxSensors);
-  for (var i = 0; i<rawMin.length; i++) {
-    rawMin[i] = 2147483647;
-  }
-  rawMax = new Array(maxSensors);
-
-  //initialize scaled vars
-  scaledVal = new Array(maxSensors);
-  scaledMin = new Array(maxSensors);
-  for (var i = 0; i<scaledMin.length; i++) {
-    scaledMin[i] = 2147483647 ;
-  }
-  scaledMax = new Array(maxSensors);
-
-  prevScaledVal = new Array(maxSensors);
-
-  //set colors used for each sensor display
-  colors = new color[maxSensors];
-  colors[0] = color(255, 0, 0); //red
-  colors[1] = color(0, 255, 0); //green
-  colors[2] = color(0, 0, 255); //blue
-  colors[3] = color(255, 255, 0); //yellow
-  colors[4] = color(0, 255, 255); //teal
-  colors[5] = color(255, 0, 255); //purple
-
-  createCanvas(windowWidth , windowHeight);
-  background(255);
+createCanvas(windowWidth, windowHeight);
+slider = createSlider(0, TWO_PI, PI / 4, 0.01);
 }
 
 function draw() {
+background(0);
+//background stars
+fill(255);
+    ellipse(random(0, width), random(10, height), 5, 5);
+    fill(255,255,255);
+    ellipse(random(0, width), random(0, height), 9, 9);
+// Ball actions
+var d = dist(windowWidth/2, windowHeight/2, mouseX, mouseY);
+//Ball visuals
+  	fill (0,0);
+  	ellipse (x, y, d, d);
 
-  background(0);
+      x = x + xspeed;
 
-  if(madeContact==false) {
-    //start handshake w/controller
-    myPort.write('\r');
-  } else {
-
-    for (var i = 0; i < scaledVal.length; i++) {
-
-      fill(colors[i]);     // make each circle a different color
-      if (i < 3){          // places each circle
-        row = 1;
-        column = i+1;
-      }
-      else{
-        row = 2;
-        column = i-2;
-      }
-
-      //Draws each circle
-      ellipse(column*displayWidth/4, row*displayHeight/3, max*abs(scaledVal[i]), max*abs(scaledVal[i]));
-      prevScaledVal[i] = scaledVal[i];
+  	 if (x > windowWidth || x < 0)  {
+     	xspeed = -xspeed;
     }
 
+    y = y + yspeed;
 
+  	if (y > windowHeight || y < 0) {
+	 	  yspeed = -yspeed;
+  	}
+//Fractal Tree Visuals
+angle = slider.value();
+stroke(255);
+translate(450, height);
+branch(200);
 
-    delay(drawDelay);
-  }
 }
-
-
-function serialEvent(Serial myPort) {
-
-  madeContact = true;
-
-  var rawInput = myPort.readvarUntil(linefeed);
-
-  if (rawInput != null) {
-    rawInput = trim(rawInput);
-
-    var sensors[] = var(split(rawInput, ','));
-
-    //prvar("raw: ");
-    //read in raw sensor values
-    for (var i=0; i<sensors.length; i++) {
-        raw[i] = sensors[i];
-        rawMin[i] = min(rawMin[i], raw[i]);
-        rawMax[i] = max(rawMax[i], raw[i]);
-    }
-    prvarln();
-
-    for (var i=0; i<sensors.length; i++) {
-      scaledVal[i] = max * (raw[i] - minAnalogVal) / maxAnalogVal;
-      scaledMin[i] = max * (rawMin[i] - minAnalogVal) / maxAnalogVal;
-      scaledMax[i] = max * (rawMax[i] - minAnalogVal) / maxAnalogVal;
-    }
-
+//New function for the tree logistics
+function branch(len) {
+  line(0, 0, 0, -len);
+  translate(0, -len);
+  if (len > 4) {
+    push();
+    rotate(angle);
+    branch(len * 0.69);
+    pop();
+    push();
+    rotate(-angle);
+    branch(len * 0.69);
+    pop();
   }
-
-  //request more data from controller
-  myPort.write('\r');
 }
