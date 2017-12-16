@@ -38,17 +38,23 @@ void loop() {
  else {
  /* Send the distance to the computer using Serial protocol, and
  turn LED OFF to indicate successful reading. */
- Serial.print(distance);
+ int mappedSonar = map(distance, -1, 100, 5, 200);
+ Serial.print(mappedSonar);
  digitalWrite(LEDPin, LOW); 
  }
   int light = analogRead(A0);
   int pot = analogRead(A1);
   int button = analogRead(A2); 
 
+  int mappedLight = map(light, 0, 200, 0, 255);
+  float mappedPot = pot/157.4;
+  int mappedButton = map(button, 0, 710, 0, 1);
+  
+
   Serial.print(',');
-  Serial.print(light);
+  Serial.print(mappedLight);
     Serial.print(',');
-  Serial.print(pot); 
+  Serial.print(mappedPot); 
     Serial.print(',');
   Serial.println(button); 
  
